@@ -1,0 +1,4 @@
+*.c
+*.o
+.idea/
+jenkins_docker_run
