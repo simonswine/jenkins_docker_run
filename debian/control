@@ -1,0 +1,15 @@
+Source: jenkins-docker-run
+Section: unknown
+Priority: extra
+Maintainer: Christian Simon <simon@swine.de>
+Build-Depends: debhelper (>= 8.0.0), cython
+Standards-Version: 3.9.4
+Homepage: https://github.com/simonswine/jenkins_docker_run
+Vcs-Git: git@github.com:simonswine/jenkins_docker_run.git
+Vcs-Browser: https://github.com/simonswine/jenkins_docker_run
+
+Package: jenkins-docker-run
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, lxc-docker
+Description: Jenkins Docker Helper
+ This litte binary helps Jenkins job to launch Docker containers without full rights for Docker

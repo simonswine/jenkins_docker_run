@@ -16,6 +16,16 @@ SYSLIBS= $(shell $(PYTHON) -c "import distutils.sysconfig; print(distutils.sysco
 
 SCRIPT_NAME=jenkins_docker_run
 
+INSTALL=install
+MKDIR=mkdir -p
+
+DESTDIR=
+# Root directory for final installation
+PREFIX = /usr
+
+# Location of binaries:
+bin_dir = ${PREFIX}/bin/
+
 
 $(SCRIPT_NAME): $(SCRIPT_NAME).o
 	$(LINKCC) -o $@ $^ -L$(LIBDIR1) -L$(LIBDIR2) -l$(PYLIB) $(LIBS) $(SYSLIBS) $(LINKFORSHARED)
@@ -28,6 +38,10 @@ $(SCRIPT_NAME).c: $(SCRIPT_NAME).py
 	$(CYTHON) --embed $(SCRIPT_NAME).py
 
 all: $(SCRIPT_NAME)
+
+install: $(SCRIPT_NAME)
+	$(MKDIR) $(DESTDIR)$(bin_dir)
+	$(INSTALL) -m755 $(SCRIPT_NAME) $(DESTDIR)$(bin_dir)
 
 clean:
 	@echo Cleaning $(SCRIPT_NAME)

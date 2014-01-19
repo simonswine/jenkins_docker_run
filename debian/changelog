@@ -1,0 +1,7 @@
+jenkins-docker-run (0.0.1-1) unstable; urgency=low
+
+  * Initial release
+  * Only basic functionality
+  * Don't expect security at all
+
+ -- Christian Simon <simon@swine.de>  Sun, 19 Jan 2014 11:21:51 +0100
