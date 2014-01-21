@@ -2,7 +2,7 @@ Source: jenkins-docker-run
 Section: unknown
 Priority: extra
 Maintainer: Christian Simon <simon@swine.de>
-Build-Depends: debhelper (>= 8.0.0), cython
+Build-Depends: debhelper (>= 8.0.0), cython, python-dev
 Standards-Version: 3.9.4
 Homepage: https://github.com/simonswine/jenkins_docker_run
 Vcs-Git: git@github.com:simonswine/jenkins_docker_run.git
