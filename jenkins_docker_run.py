@@ -5,27 +5,51 @@ import subprocess
 import sys
 
 
-JENKINS_USER='jenkins'
-JENKINS_HOME='/jenkins'
+CONTAINER_USER='devel'
+CONTAINER_HOME='/devel'
 
 
 def build_cmd(config):
+
+    env_blacklist = ['WORKSPACE','HOME']
+    env_vars = []
+
+    # Prepare Environment variables
+    for key in os.environ.keys():
+        if key in env_blacklist:
+            continue
+        env_vars += [ 
+            '-e',
+            "%s=%s" % (key,os.environ[key])
+        ]
+
+    # Workspace in 
+    workspace = os.path.join(
+        CONTAINER_HOME,
+        'workspace',
+        os.path.basename(config['workspace'])
+    )
 
     cmd = [
         '/usr/bin/docker',  # docker binary
         'run',              # run a command
         '-t',               # pseudo tty
         '-rm',              # remove afterwards
-        '-u',               # use user jenkins
+        '-u',               # use configured user 
         config['user'],
         '-v',               # mount workspace
-        '%s:%s' % (config['workspace'],config['workspace']),
+        '%s:%s' % (config['workspace'],workspace),
         '-v',               # mount tmp_dir
         '%s:%s' % (config['tmp_dir'],config['tmp_dir']),
+        '-e',
+        'WORKSPACE=%s' % workspace,
+        '-e',
+        'HOME=%s' % CONTAINER_HOME,
+   ] + env_vars + [
         '-w',
-        config['workspace'],
+        workspace,
         config['image'],
-        '/bin/bash',
+        '/bin/bash','-l',
         config['cmd']
         ]
 
@@ -45,8 +69,7 @@ def main():
         print >> sys.stderr, 'I must be executed within a jenkins job'
         sys.exit(1)
 
-    config['user'] = JENKINS_USER
-
+    config['user'] = CONTAINER_USER
     config['tmp_dir'] = '/tmp'
 
     #TODO validate
@@ -56,20 +79,17 @@ def main():
 
 
     cmd = build_cmd(config)
-    print ("Running command: ",' '.join(cmd))
+    #print ("Running docker command:")
+    #print (' '.join(cmd))
 
+    process = subprocess.Popen(cmd,stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
+	
+    sys.exit(process.wait())
+	
 
-    subprocess.call(cmd,stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
 
     pass
 
 
 if __name__ == "__main__":
     main()
-
-
-
- 
-
-
-#/usr/bin/docker run -t -u jenkins -v /tmp:/tmp -v $WORKSPACE:$WORKSPACE -w $WORKSPACE jenkins1.dmz:5000/former03/jenkins_slave:wheezy_ruby_test /bin/bash
