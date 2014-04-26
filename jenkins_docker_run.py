@@ -18,12 +18,12 @@ def build_cmd(config):
     for key in os.environ.keys():
         if key in env_blacklist:
             continue
-        env_vars += [ 
+        env_vars += [
             '-e',
             "%s=%s" % (key,os.environ[key])
         ]
 
-    # Workspace in 
+    # Workspace in
     workspace = os.path.join(
         CONTAINER_HOME,
         'workspace',
@@ -34,8 +34,8 @@ def build_cmd(config):
         '/usr/bin/docker',  # docker binary
         'run',              # run a command
         '-t',               # pseudo tty
-        '-rm',              # remove afterwards
-        '-u',               # use configured user 
+        '--rm',             # remove afterwards
+        '-u',               # use configured user
         config['user'],
         '-v',               # mount workspace
         '%s:%s' % (config['workspace'],workspace),
@@ -83,9 +83,9 @@ def main():
     #print (' '.join(cmd))
 
     process = subprocess.Popen(cmd,stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
-	
+
     sys.exit(process.wait())
-	
+
 
 
     pass
